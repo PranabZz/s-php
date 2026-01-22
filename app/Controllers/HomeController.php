@@ -17,41 +17,54 @@ class HomeController extends ApiController
 {
     // TODO: Implement Controller functionality
     protected $user;
-    public function __construct(){
+    public function __construct()
+    {
 
         $this->user = new Users();
     }
 
-    public function index(){
+    public function index()
+    {
         View::render('welcome.php');
     }
 
-    public function register(){
-        try{
+
+    public function register()
+    {
+        try {
             $request = Request::request();
             $this->user->save($request);
-        }catch(Exception){
-            
+        } catch (Exception) {
         }
     }
 
-    public function login(){
-        try{
+    public function login()
+    {
+        try {
             $request  = Request::request();
 
             $bearer_token = Auth::login($request);
 
-            return $this->successResponse("Login sucess" , $bearer_token);
-
-        }catch(Exception){
+            return $this->successResponse("Login sucess", $bearer_token);
+        } catch (Exception) {
             return $this->errorResponse("Error try again");
-        } 
+        }
     }
 
-    public function welcome(){
-        try{
+    public function welcome()
+    {
+        try {
             return $this->successResponse("Sucessfully loged in user");
-        }catch(Exception){
+        } catch (Exception) {
+            return $this->errorResponse("Failed to connect", 404);
+        }
+    }
+
+    public function health()
+    {
+        try {
+            return $this->successResponse("Healthy");
+        } catch (Exception) {
             return $this->errorResponse("Failed to connect", 404);
         }
     }
