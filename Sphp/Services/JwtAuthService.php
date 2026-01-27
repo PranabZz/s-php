@@ -8,7 +8,7 @@ use Sphp\Core\Database;
 
 class JwtAuthService
 {
-    private $jwt_secret = "pranab_key";
+    private $jwt_secret = env('JWT_SECRET');
     private $header = ["alg" => "HS256", "type" => "JWT"];
     private static $instance = null;
     private $accessTokenExpiry = 30; // 15 minutes
@@ -202,7 +202,6 @@ class JwtAuthService
             // Now insert the new refresh token
             $insertQuery = "INSERT INTO refresh_tokens (user_id, token_hash, expires_at) VALUES (?, ?, ?)";
             $this->db->query($insertQuery, [$userId, $tokenHash, $expiresAt]);
-
         } catch (Exception $e) {
             // Use proper error handling/logging
             dd("Error storing refresh token: " . $e->getMessage());
@@ -244,3 +243,4 @@ class JwtAuthService
         return Response::response(200, 'Refresh token revoked');
     }
 }
+

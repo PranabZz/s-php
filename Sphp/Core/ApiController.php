@@ -10,7 +10,7 @@ class ApiController extends Controller
 {
     private $rate_limiter = 1000;
 
-    
+
     protected function jsonResponse(array $data, int $statusCode = 200): void
     {
         http_response_code($statusCode);
@@ -41,7 +41,7 @@ class ApiController extends Controller
         $this->jsonResponse($response, $statusCode);
     }
 
-  
+
     protected function setCorsHeaders(): void
     {
         header("Access-Control-Allow-Origin: *");
@@ -55,7 +55,7 @@ class ApiController extends Controller
         }
     }
 
-   
+
     protected function getBearerToken(): ?string
     {
         $headers = getallheaders();
@@ -68,7 +68,7 @@ class ApiController extends Controller
         return null;
     }
 
-   
+
     protected function authenticate(): void
     {
         $this->setCorsHeaders();
@@ -82,21 +82,10 @@ class ApiController extends Controller
         $decodedUser = Auth::user($token);
 
         if (!$decodedUser) {
-            try {
-                $newTokens = Auth::refresh();
-                $decodedUser = Auth::user($newTokens['access_token']);
-                if ($decodedUser) {
-                    $this->successResponse("Token refreshed", $newTokens, 200);
-                    return;
-                }
-            } catch (\Exception $e) {
-                $this->errorResponse("Invalid or expired token", 401);
-            }
+            $this->errorResponse("Invalid or expired token", 401);
         }
 
-        $this->user = $decodedUser;
+        $user = $decodedUser;
     }
-
-  
-    
 }
+

@@ -3,6 +3,10 @@
 require_once '../Sphp/function.php';
 require_once '../vendor/autoload.php';
 
+// Load environment variables from .env file
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
+
 spl_autoload_register(function ($class) {
     $class = ltrim($class, '\\');
     $base_dir = __DIR__ . '/../';

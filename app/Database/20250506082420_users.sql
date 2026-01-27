@@ -1,8 +1,8 @@
 CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   name VARCHAR(100) NOT NULL,
   email VARCHAR(100) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
-  verified TINYINT(1) DEFAULT 0,   -- 0 = not verified, 1 = verified
+  verified INTEGER DEFAULT 0,   -- 0 = not verified, 1 = verified
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

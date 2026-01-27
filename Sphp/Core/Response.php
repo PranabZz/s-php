@@ -10,5 +10,6 @@ class Response
         http_response_code($response_code);
 
         echo json_encode([$key => $message]);
+        exit(); // Terminate script execution after sending response
     }
 }

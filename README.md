@@ -54,6 +54,49 @@ S-PHP/
 └── .gitignore
 ```
 
+### Database
+
+The database configuration is done in the `.env` file. You can use SQLite, MySQL, or PostgreSQL.
+
+**SQLite**
+
+To use SQLite, set the `DB_CONNECTION` to `sqlite` in your `.env` file. The `DB_DATABASE` should be the path to your database file.
+
+```
+DB_CONNECTION=sqlite
+DB_DATABASE=/path/to/your/database.sqlite
+```
+
+**MySQL**
+
+To use MySQL, set the `DB_CONNECTION` to `mysql` in your `.env` file. You will also need to set the `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD`.
+
+```
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=sphp
+DB_USERNAME=sphpuser
+DB_PASSWORD=dbpassword
+```
+
+When you set `DB_CONNECTION` to `mysql`, the `docker-compose.yaml` file will start the `mysql` service.
+
+**PostgreSQL**
+
+To use PostgreSQL, set the `DB_CONNECTION` to `pgsql` in your `.env` file. You will also need to set the `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, and `DB_PASSWORD`.
+
+```
+DB_CONNECTION=pgsql
+DB_HOST=postgres
+DB_PORT=5432
+DB_DATABASE=sphp
+DB_USERNAME=sphpuser
+DB_PASSWORD=dbpassword
+```
+
+When you set `DB_CONNECTION` to `pgsql`, the `docker-compose.yaml` file will start the `postgres` service.
+
 ### Usage
 
 Create a New Controller
@@ -110,3 +153,7 @@ class HomeController
 
 ## Contributions
 If you would like to contribute to this project, feel free to fork the repository and create a pull request with your changes. Please make sure to follow the coding standards and write tests for any new features.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
