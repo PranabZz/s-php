@@ -2,27 +2,12 @@
 
 
 
-if (!isset($_SESSION))
+if (!isset($_SESSION) && php_sapi_name() !== 'cli') {
     session_start();
+}
 
-error_reporting(E_ALL & ~E_WARNING);
-ini_set('display_errors', 1);
-
-register_shutdown_function(function () {
-
-    $error = error_get_last();
-    if ($error && in_array($error['type'], [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE])) {
-
-        error_log("Fatal Error: " . $error['message'] . " in " . $error['file'] . " on line " . $error['line']);
-
-        $errorMessage = urlencode("Error: " . $error['message'] . " in " . $error['file'] . " on line " . $error['line']);
-
-        header("Location: error.html?error=$errorMessage");
-
-        exit;
-    }
-
-});
+require_once __DIR__ . '/Core/ErrorHandler.php';
+\Sphp\Core\ErrorHandler::register();
 
 
 function asset($path)

@@ -1,7 +1,9 @@
 <?php
 
-require_once '../Sphp/function.php';
-require_once '../vendor/autoload.php';
+require_once __DIR__ . '/../Sphp/function.php';
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    require_once __DIR__ . '/../vendor/autoload.php';
+}
 
 spl_autoload_register(function ($class) {
     $class = ltrim($class, '\\');
@@ -11,14 +13,12 @@ spl_autoload_register(function ($class) {
 
     if (file_exists($file)) {
         require_once $file;
-    } else {
-        exit("Autoloader Error: Unable to load class '$class'. Expected file at $file not found.");
     }
 });
 
 
 
-$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$requestUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
 
 
 if (strpos($requestUri, '/api') === 0) {
