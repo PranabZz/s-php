@@ -3,23 +3,25 @@
 namespace App\Models;
 
 use Sphp\Core\Models;
+use Utopia\Auth\Hashes\Bcrypt;
 
 /* TODO */
 
 class Users extends Models
 {
-    public function __construct()
+    protected $table = "users";
+    protected $fillables = ['email', 'name', 'password', 'verified'];
+
+
+    public static function findByEmail($email)
     {
-        $this->table = "users";
-        $this->fillables = ['email', 'name', 'password', 'verified'];
-        parent::__construct();
+        return static::findOne(['email' => $email]);
     }
 
-    public function save($data)
+    public static function save($data)
     {
-
-        $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
-        return $this->create($data);
+        $hasher = new Bcrypt();
+        $data['password'] = $hasher->hash($data['password']);
+        return static::create($data);
     }
 }
-

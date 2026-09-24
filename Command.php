@@ -15,8 +15,8 @@ class Command
      */
     private array $commands = [
         'up' => 'cd public && php -S localhost:8000',
-        'work' => 'php ' . __DIR__ . '/../app/services/work',
-        'migrate' => 'php ' . __DIR__ . '/../app/database/init.php'
+        'work' => 'php ' . __DIR__ . '/app/Services/work',
+        'migrate' => 'php ' . __DIR__ . '/app/Database/init.php'
     ];
 
 
@@ -27,33 +27,33 @@ class Command
      */
     private array $fileCommands = [
         'views' => [
-            'path' => '../app/views/{name}.php',
+            'path' => 'app/views/{name}.php',
             'template' => '<!-- View File: {basename} -->',
             'type' => null,
             'namespace' => null
         ],
         'migration' => [
-            'path' => '../app/database/{date}_{name}.sql',
+            'path' => 'app/Database/{date}_{name}.sql',
             'template' => '--Your sql code',
             'type' => null,
             'namespace' => null
         ],
         'controller' => [
-            'path' => '../app/controllers/{name}.php',
+            'path' => 'app/Controllers/{name}.php',
             'type' => 'Controller',
-            'namespace' => 'Sphp\\Controllers',
+            'namespace' => 'App\\Controllers',
             'baseClass' => 'Sphp\\Controllers\\Controller'
         ],
         'middleware' => [
-            'path' => '../app/middleware/{name}.php',
+            'path' => 'app/Middleware/{name}.php',
             'type' => 'Middleware',
-            'namespace' => 'Sphp\\Middleware',
+            'namespace' => 'App\\Middleware',
             'baseClass' => 'Sphp\\Middleware\\Middleware'
         ],
         'model' => [
-            'path' => '../app/models/{name}.php',
+            'path' => 'app/Models/{name}.php',
             'type' => 'Model',
-            'namespace' => 'Sphp\\Models',
+            'namespace' => 'App\\Models',
             'baseClass' => 'Sphp\\Core\\Models'
         ]
     ];

@@ -1,14 +1,17 @@
 <?php
 
 namespace App\Middleware;
-use Sphp\Core\Response; 
-use Sphp\Services\Auth;// PHP cannot support multiple class inhertance so we use namepsace 
+
+use Sphp\Auth\Auth;
 
 class Middleware
 {
     public function handle()
     {
-        return Auth::check();
+        if (!Auth::check()) {
+            redirect('/login', ['error' => 'Please sign in to access this page']);
+            exit;
+        }
+        return true;
     }
 }
-

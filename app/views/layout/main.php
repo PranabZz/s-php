@@ -6,10 +6,7 @@
     <?php if (isset($title)): ?>
         <title><?= htmlspecialchars($title) ?></title>
     <?php endif; ?>
-    <?php
-        $baseDir = __DIR__ . '/../../../';
-    ?>
-    <link href="<?php echo $baseUrl; ?>/public/css/output.css" rel="stylesheet">
+    <link href="<?= function_exists('asset') ? asset('css/output.css') : '/public/css/output.css' ?>" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

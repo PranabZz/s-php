@@ -1,4 +1,4 @@
-@layout('main', ['title' => "404 - Oops! You're lost"])
+@layout('main', ['title' => "403 - Access Forbidden"])
 
 <script>
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -12,23 +12,25 @@
 
     <main class="flex flex-col items-center justify-center text-center max-w-sm">
         
-        <!-- 404 Visual: 4 [!] 4 -->
+        <!-- 403 Visual: 4 [🔒] 3 -->
         <div class="flex items-center justify-center space-x-2 text-7xl font-extrabold tracking-tight mb-6 select-none">
             <span class="text-neutral-900 dark:text-white">4</span>
             <div class="w-14 h-14 rounded-full bg-[#e83b46] text-white flex items-center justify-center shadow-sm">
-                <span class="text-white text-3xl font-extrabold leading-none pb-0.5">!</span>
+                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
             </div>
-            <span class="text-neutral-900 dark:text-white">4</span>
+            <span class="text-neutral-900 dark:text-white">3</span>
         </div>
 
         <!-- Heading -->
         <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 dark:text-white mb-2">
-            Oops! You're lost.
+            Oops! Access denied.
         </h1>
 
         <!-- Subtitle -->
         <p class="text-sm text-neutral-500 dark:text-neutral-400 mb-8 leading-relaxed">
-            The page you are looking for was not found.
+            You don’t have permission to access this page.
         </p>
 
         <!-- Back to Home Button -->

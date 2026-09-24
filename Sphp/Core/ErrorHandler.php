@@ -160,6 +160,19 @@ class ErrorHandler
         $msg = $e->getMessage();
 
         if (
+            str_contains($msg, "ENV FILE NOT FOUND") ||
+            (str_contains($msg, ".env") && str_contains($msg, "not found"))
+        ) {
+            return [
+                "title" => "Environment File Missing (.env)",
+                "description" =>
+                    "The application could not locate your `.env` configuration file at the expected path.",
+                "action" =>
+                    "Create a `.env` file in the project root by copying the template: `cp .env.example .env`",
+            ];
+        }
+
+        if (
             str_contains(
                 $msg,
                 "php_network_getaddresses: getaddrinfo for mysql failed",

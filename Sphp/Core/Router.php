@@ -5,28 +5,28 @@ namespace Sphp\Core;
 use Sphp\Core\Response;
 use App\Middleware;
 
-/* 
+/*
     A Router class that supports routing to controller methods for GET and POST requests.
 */
 
-/* 
+/*
     Adding Middleware to the routes to test weather to take the user to next route or redirect somewhere else
 */
 
 class Router
 {
 
-    // get routes is a list to collect all the routes that the user has created 
+    // get routes is a list to collect all the routes that the user has created
     private $getRoutes = [];
     private $postRoutes = [];
 
     /*
         $routes: endpoint
         $controller: Controller we use to fetch some data
-        $method: method used from that controller 
+        $method: method used from that controller
     */
 
-    /* 
+    /*
         [['/home'] => ['HomeController', 'index', 'Middleware']];
     */
 
@@ -61,7 +61,7 @@ class Router
                     $currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
                     $currentUrl .= "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
 
-                    $_SESSION['previous_url'] = $_SESSION['current_url'] ?? '/'; 
+                    $_SESSION['previous_url'] = $_SESSION['current_url'] ?? '/';
                     $_SESSION['current_url'] = $currentUrl;
                     $prev_url = $_SESSION['previous_url'] == $_SESSION['current_url'] ? "/" : $_SESSION['previous_url'];
                     $this->handle_request($config, $params, $prev_url);
@@ -73,7 +73,7 @@ class Router
                 $matchedRoute = $this->matchDynamicRoute($definedRoute, $route, $params);
                 if ($matchedRoute) {
                     // if (validateCsrfToken($_SESSION['csrf_token'])) {
-                        if(!$_POST['content']){
+                        if (empty($_POST['content'])) {
                             $_POST = sanitizeHtml($_POST);
                         }
                         $this->handle_request($config, $params);
@@ -86,6 +86,7 @@ class Router
         }
 
         // If no route matches
+        http_response_code(404);
         View::render('404.html');
     }
 

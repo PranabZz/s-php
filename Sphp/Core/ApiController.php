@@ -2,10 +2,6 @@
 
 namespace Sphp\Core;
 
-
-use App\Services\JwtAuthService;
-use Sphp\Services\Auth;
-
 class ApiController extends Controller
 {
     private $rate_limiter = 1000;
@@ -79,22 +75,8 @@ class ApiController extends Controller
             $this->errorResponse("No token provided", 401);
         }
 
-        $decodedUser = Auth::user($token);
-
-        if (!$decodedUser) {
-            try {
-                $newTokens = Auth::refresh();
-                $decodedUser = Auth::user($newTokens['access_token']);
-                if ($decodedUser) {
-                    $this->successResponse("Token refreshed", $newTokens, 200);
-                    return;
-                }
-            } catch (\Exception $e) {
-                $this->errorResponse("Invalid or expired token", 401);
-            }
-        }
-
-        $this->user = $decodedUser;
+        // Auth service removed pending new auth implementation
+        $this->errorResponse("Authentication service is currently not configured", 501);
     }
 
   

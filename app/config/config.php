@@ -1,19 +1,21 @@
 <?php
 
+require_once __DIR__ . '/../../Sphp/function.php';
+
 /* 
     Here we keep our database host and the database we will be using for the project
 */
 
-
 return [
-    'host' => $_ENV['DB_HOST'] ?? 'localhost',       
-    'port' => $_ENV['DB_PORT'] ?? '3306', 
-    'database' => $_ENV['DB_DATABASE'] ?? 'new',   
-    'username' => $_ENV['DB_USERNAME'] ?? 'root',    
-    'password' => $_ENV['DB_PASSWORD'] ?? 'root',    
-    'smtpHost' => $_ENV['MAIL_HOST'] ?? 'smtp.gmail.com', 
-    'smtpPort' => $_ENV['MAIL_PORT'] ?? 587,         // Default to 587 if not found
-    'smtpUsername' => $_ENV['MAIL_USERNAME'] ?? '',  // Default to empty string if not found
-    'smtpPassword' => $_ENV['MAIL_PASSWORD'] ?? '',  // Default to empty string if not found
+    'connection' => env('DB_CONNECTION', 'sqlite'),
+    'host' => env('DB_HOST', '127.0.0.1'),
+    'port' => env('DB_PORT', env('DB_CONNECTION') === 'pgsql' ? '5432' : '3306'),
+    'database' => env('DB_DATABASE', __DIR__ . '/../Database/database.sqlite'),
+    'username' => env('DB_USERNAME', 'root'),
+    'password' => env('DB_PASSWORD', ''),
+    'smtpHost' => env('MAIL_HOST', 'smtp.gmail.com'),
+    'smtpPort' => env('MAIL_PORT', 587),
+    'smtpUsername' => env('MAIL_USERNAME', ''),
+    'smtpPassword' => env('MAIL_PASSWORD', ''),
 ];
  

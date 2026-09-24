@@ -23,14 +23,15 @@ class SMTPMailer
     }
 
     public static function getInstance()
-    {
         if (self::$instance === null) {
-            $config = include '../../sphp/function.php';
+            $config = file_exists(__DIR__ . '/../../app/config/config.php')
+                ? require __DIR__ . '/../../app/config/config.php'
+                : [];
 
-            $smtpHost = env('MAIL_HOST', $config['smtpHost'] ?? 'smtp.gmail.com');
-            $smtpPort = env('MAIL_PORT', $config['smtpPort'] ?? 587);
-            $smtpUsername = env('MAIL_USERNAME', $config['smtpUsername'] ?? '');
-            $smtpPassword = env('MAIL_PASSWORD', $config['smtpPassword'] ?? '');
+            $smtpHost = $config['smtpHost'] ?? env('MAIL_HOST', 'smtp.gmail.com');
+            $smtpPort = $config['smtpPort'] ?? env('MAIL_PORT', 587);
+            $smtpUsername = $config['smtpUsername'] ?? env('MAIL_USERNAME', '');
+            $smtpPassword = $config['smtpPassword'] ?? env('MAIL_PASSWORD', '');
 
             $notSetVariables = [];
             if (!$smtpHost) $notSetVariables[] = 'smtpHost';

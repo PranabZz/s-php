@@ -4,3 +4,6 @@ vendor
 .vscode
 .data
 /app/services/jobs.json
+/app/Services/jobs.json
+*.sqlite
+*.sqlite-journal

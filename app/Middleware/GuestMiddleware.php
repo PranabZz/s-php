@@ -2,17 +2,17 @@
 
 namespace App\Middleware;
 
-use Sphp\Core\Response; 
-use Sphp\Services\Auth;// PHP doesn't support multiple inheritance, so we use namespaces to organize and share code
+use Sphp\Auth\Auth;
 
 class GuestMiddleware
 {
     public function handle()
     {
+        // Auth check pending new auth implementation
         if (Auth::check()) {
-            return "/";
+            return redirect('/dashboard', ["message" => "You are already logged in."]);
         }
 
-        return true;
+        return false;
     }
 }

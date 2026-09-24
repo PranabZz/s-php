@@ -7,13 +7,14 @@ class View
   {
     extract($data);
 
-    $viewPath = '../app/views/' . $filename;
+    $baseViewDir = __DIR__ . '/../../app/views/';
+    $viewPath = $baseViewDir . ltrim($filename, '/');
     if (file_exists($viewPath)) {
       // Load file content
       $content = file_get_contents($viewPath);
 
-      $content = preg_replace_callback("/@layout\('([^']+)'(?:\s*,\s*(\[.*?\]))?\)/", function ($matches) {
-        $layoutPath = '../app/views/layout/' . $matches[1] . '.php';
+      $content = preg_replace_callback("/@layout\('([^']+)'(?:\s*,\s*(\[.*?\]))?\)/", function ($matches) use ($baseViewDir) {
+        $layoutPath = $baseViewDir . 'layout/' . $matches[1] . '.php';
         $variables = isset($matches[2]) ? eval ('return ' . $matches[2] . ';') : [];
 
         if (file_exists($layoutPath)) {
@@ -25,8 +26,8 @@ class View
         return "<!-- Layout '{$matches[1]}' not found -->";
       }, $content);
 
-      $content = preg_replace_callback("/@component\('([^']+)'(?:\s*,\s*(\$[\w]+))?\)/", function ($matches) use ($data) {
-        $componentPath = 'app/views/components/' . $matches[1] . '.php';
+      $content = preg_replace_callback("/@component\('([^']+)'(?:\s*,\s*(\$[\w]+))?\)/", function ($matches) use ($data, $baseViewDir) {
+        $componentPath = $baseViewDir . 'components/' . $matches[1] . '.php';
         $variables = [];
 
         if (isset($matches[2]) && isset($data[substr($matches[2], 1)])) {
@@ -46,7 +47,13 @@ class View
       // Evaluate the resulting PHP content
       eval ('?>' . $content);
     } else {
-      require('../app/views/404.html');
+      $notFoundPath = $baseViewDir . '404.html';
+      if (file_exists($notFoundPath)) {
+        require($notFoundPath);
+      } else {
+        http_response_code(404);
+        echo "<!DOCTYPE html><html><body><h1>404 - View Not Found</h1></body></html>";
+      }
     }
   }
 }

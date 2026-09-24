@@ -85,17 +85,29 @@ function redirect($url, $message = "")
 
 function loadEnv($filePath)
 {
-    if (!file_exists($filePath)) {
-        dd("ENV FILE NOT FOUND at $filePath");
+    static $loaded = [];
+    if (isset($loaded[$filePath])) {
+        return true;
     }
 
-    $envData = [];
+    if (!file_exists($filePath)) {
+        $fallback = dirname($filePath) . '/.env.example';
+        if (file_exists($fallback)) {
+            $filePath = $fallback;
+        } else {
+            return false;
+        }
+    }
 
     $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    if ($lines === false) {
+        return false;
+    }
+
     foreach ($lines as $line) {
         $line = trim($line);
 
-        if ($line === '' || str_starts_with($line, '#')) {
+        if ($line === '' || str_starts_with($line, '#') || !str_contains($line, '=')) {
             continue;
         }
 
@@ -103,28 +115,71 @@ function loadEnv($filePath)
         $key = trim($key);
         $value = trim($value);
 
+        // Strip surrounding quotes
+        if (strlen($value) >= 2) {
+            if ((str_starts_with($value, '"') && str_ends_with($value, '"')) ||
+                (str_starts_with($value, "'") && str_ends_with($value, "'"))) {
+                $value = substr($value, 1, -1);
+            }
+        }
+
         $_ENV[$key] = $value;
         $_SERVER[$key] = $value;
         putenv("$key=$value");
-
-        $envData[$key] = $value;
     }
 
-
+    $loaded[$filePath] = true;
     return true;
 }
 
-
 loadEnv(__DIR__ . '/../.env');
 
-function env($key, $default = null)
-{
-    if (isset($_ENV[$key])) {
-        return $_ENV[$key];
-    }
+if (!function_exists('env')) {
+    function env($key, $default = null)
+    {
+        $value = $_ENV[$key] ?? $_SERVER[$key] ?? getenv($key);
 
-    $value = getenv($key);
-    return $value !== false ? $value : $default;
+        if ($value === false || $value === null || ($value === '' && $default !== null)) {
+            return $default;
+        }
+
+        if (is_string($value)) {
+            switch (strtolower($value)) {
+                case 'true':
+                case '(true)':
+                    return true;
+                case 'false':
+                case '(false)':
+                    return false;
+                case 'empty':
+                case '(empty)':
+                    return '';
+                case 'null':
+                case '(null)':
+                    return null;
+            }
+        }
+
+        return $value;
+    }
+}
+
+if (!function_exists('get_env')) {
+    function get_env($key, $default = null)
+    {
+        return env($key, $default);
+    }
+}
+
+if (!function_exists('app')) {
+    function app(?string $abstract = null, array $parameters = []): mixed
+    {
+        if ($abstract === null) {
+            return \Sphp\Core\App::getInstance();
+        }
+
+        return \Sphp\Core\App::getInstance()->make($abstract, $parameters);
+    }
 }
 
 

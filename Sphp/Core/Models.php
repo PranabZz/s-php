@@ -20,33 +20,73 @@ class Models
 
     public function __construct()
     {
-        $this->env = require('../app/config/config.php');
-        $this->db = new Database($this->env);
+        $this->env = function_exists('app') && app()->has('config')
+            ? app('config')
+            : (file_exists(__DIR__ . '/../../app/config/config.php') ? require __DIR__ . '/../../app/config/config.php' : []);
+
+        $this->db = function_exists('app') && app()->has('db')
+            ? app('db')
+            : new Database($this->env);
     }
 
-    public function create($request)
+    public static function __callStatic(string $method, array $arguments)
+    {
+        return (new static())->$method(...$arguments);
+    }
+
+    public static function create($request)
+    {
+        return (new static())->performCreate($request);
+    }
+
+    public static function update($request, $id)
+    {
+        return (new static())->performUpdate($request, $id);
+    }
+
+    public static function delete($id)
+    {
+        return (new static())->performDelete($id);
+    }
+
+    public static function select(array $columns, array $where = [], string $orderBy = '', int $limit = 0)
+    {
+        return (new static())->performSelect($columns, $where, $orderBy, $limit);
+    }
+
+    public static function findByID($id)
+    {
+        return (new static())->performFindByID($id);
+    }
+
+    public static function findOne(array $where)
+    {
+        return (new static())->performFindOne($where);
+    }
+
+    public function performCreate($request)
     {
         try {
             $data = array_intersect_key($request, array_flip($this->fillables));
-    
+
             if (empty($data)) {
                 throw new \Exception("No valid fields provided for insertion.");
             }
-    
+
             $columns = implode(", ", array_keys($data));
             $placeholders = implode(", ", array_fill(0, count($data), "?"));
-    
+
             $query = "INSERT INTO {$this->table} ({$columns}) VALUES ({$placeholders})";
-    
+
             $result = $this->db->query($query, array_values($data));
-    
+
             return $result;
         } catch (\Exception $e) {
            dd($e->getMessage());
         }
     }
 
-    public function update($request, $id)
+    public function performUpdate($request, $id)
     {
         $data = array_intersect_key($request, array_flip($this->fillables));
         if (empty($data)) {
@@ -63,11 +103,9 @@ class Models
         $params[] = $id;
 
         $this->db->query($query, $params);
-
-
     }
 
-    public function delete($id)
+    public function performDelete($id)
     {
         if (empty($id)) {
             throw new \Exception("No valid fields provided for updating.");
@@ -76,11 +114,10 @@ class Models
         $query = "DELETE FROM {$this->table} WHERE id = ?";
 
         $params[] = $id;
-
         $this->db->query($query, $params);
-
     }
-    public function select(array $columns, array $where = [], string $orderBy = '', int $limit = 0)
+
+    public function performSelect(array $columns, array $where = [], string $orderBy = '', int $limit = 0)
     {
         if (empty($columns)) {
             throw new \Exception("No valid fields provided for selection.");
@@ -110,11 +147,8 @@ class Models
         return $this->db->query($query, $params);
     }
 
-
-
-    public function findByID($id)
+    public function performFindByID($id)
     {
-
         if (empty($id)) {
             throw new \Exception("No valid fields provided for selection.");
         }
@@ -122,7 +156,12 @@ class Models
         $query = "SELECT * FROM {$this->table} WHERE id = $id";
         $result = $this->db->query($query);
 
-        return $result[0];
+        return $result[0] ?? null;
+    }
 
+    public function performFindOne(array $where)
+    {
+        $result = $this->performSelect(['*'], $where);
+        return $result[0] ?? null;
     }
 }
