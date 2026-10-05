@@ -23,15 +23,29 @@
         </div>
 
         <div class="flex items-center space-x-4">
+            <?php if(!(isset($user) && $user)): ?>
             <a href="https://docs-delta-amber.vercel.app/" target="_blank" class="text-sm text-neutral-500 hover:text-black dark:hover:text-white transition-colors">
                 Docs
             </a>
             <a href="https://github.com/pranabZz/S-PHP" target="_blank" class="text-sm text-neutral-500 hover:text-black dark:hover:text-white transition-colors">
                 GitHub
             </a>
+            <?php endif; ?>
+
+            <?php if(isset($user) && $user): ?>
+            <a href="/dashboard" class="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+                <?= htmlspecialchars($user['name'] ?? $user['email']) ?>
+            </a>
+            <form action="/logout" method="POST" class="inline m-0">
+                <button type="submit" class="text-sm text-neutral-500 hover:text-black dark:hover:text-white transition-colors bg-transparent border-0 cursor-pointer p-0">
+                    Sign Out
+                </button>
+            </form>
+            <?php else: ?>
             <a href="/login" class="text-sm text-neutral-500 hover:text-black dark:hover:text-white transition-colors">
                 Sign In
             </a>
+            <?php endif; ?>
 
             <!-- Theme Toggle Button -->
             <button id="theme-toggle" type="button" aria-label="Toggle theme"
@@ -50,7 +64,7 @@
 
     <!-- Main Content Area (Classic Next.js Style) -->
     <main class="flex flex-col items-center justify-center flex-1 px-6 text-center max-w-4xl w-full py-12">
-        
+
         <!-- Big Iconic Title -->
         <h1 class="text-5xl sm:text-7xl font-bold tracking-tight mb-6">
             Welcome to <a href="https://github.com/pranabZz/S-PHP" target="_blank" class="text-blue-600 hover:underline">Sphp!</a>
@@ -63,7 +77,7 @@
 
         <!-- 4 Grid Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-3xl text-left">
-            
+
             <!-- Card 1: Documentation -->
             <a href="https://docs-delta-amber.vercel.app/" target="_blank"
                 class="group p-6 rounded-xl border border-neutral-200 dark:border-neutral-800 hover:border-blue-600 dark:hover:border-blue-600 transition-colors bg-white dark:bg-black">

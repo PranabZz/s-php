@@ -6,7 +6,7 @@ use App\Controllers\Authentication\LoginController;
 use App\Controllers\Authentication\RegisterController;
 use App\Controllers\Dashboard\DashboardController;
 use App\Middleware\GuestMiddleware;
-use App\Middleware\Middleware;
+use App\Middleware\AuthenticatedUser;
 use Sphp\Core\Router;
 
 $router = new Router();
@@ -27,7 +27,7 @@ $router->post('/logout', LoginController::class, 'logout');
 // Protected Routes
 // ======================
 
-$router->get('/dashboard', DashboardController::class, 'index', Middleware::class);
+$router->get('/dashboard', DashboardController::class, 'index', AuthenticatedUser::class);
 
 
 
